@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tic-Tac-Toe</title>
+
+    <style>
+        html,
+        body {
+            margin: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        main {
+            width: 90vmin;
+            height: 90vmin;
+            display: grid;
+            grid: repeat(3, 1fr) / repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        div {
+            background: mediumseagreen;
+            overflow: hidden;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold;
+            font-size: 25vmin;
+            line-height: 1.1em;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 0 0 #0000;
+            transition: box-shadow .4s, transform .4s, background-color .4s;
+        }
+
+        div.victory {
+            background: green;
+            box-shadow: 4px 4px 4px #000a;
+            transform: scale(1.05);
+        }
+    </style>
+
+    <script>
+        'use strict';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const players = ['X', 'O'];
+            const score = [0, 0];
+            const wins = [
+                1 + 2 + 4,
+                8 + 16 + 32,
+                64 + 128 + 256,
+                1 + 8 + 64,
+                2 + 16 + 128,
+                4 + 32 + 256,
+                1 + 16 + 256,
+                4 + 16 + 64,
+            ];
+            const squares = [];
+            // console.log(wins);
+            let player = 0;
+            let won = false;
+
+
+            document.querySelectorAll('main div').forEach((square, index) => {
+                squares.push(square);
+                square.value = 2 ** index;
+                square.addEventListener('click', capture);
+            });
+
+            function capture() {
+                if (!this.innerText && !won) {
+                    score[player] += this.value;
+                    this.innerText = players[player];
+                    // console.log(players[player], score[player]);
+                    won = celebrate(wins.filter(win => (win & score[player]) == win));
+                    player = 1 - player;
+                }
+            }
+
+            function celebrate(victory) {
+                victory.forEach(combo => {
+                    squares.forEach(square => {
+                        if ((square.value & combo) == square.value) {
+                            square.classList.add('victory');
+                        }
+                    });
+                });
+                return victory.length;
+            }
+        });
+    </script>
+
+
+</head>
+
+<body>
+    <main>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </main>
+
+</body>
+
+</html>
